@@ -5,18 +5,6 @@
 </marquee>
 
 # 【🌿 太虚仙门修仙用药全典｜筑基到化神的丹方指南 📜】
-# 推荐1：中医药养生动图
-![中医药养生动图](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExd3c4a29uZ3E0d2Z1c29nZG91d2U5d2g4d2I5eW56eW56cW56c3V2biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3ohhwHhY4bjsEZwG8Y/giphy.gif)
-
-# 推荐2：修仙炼丹动图
-![修仙炼丹动图](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDQ4azk5d2g0d2Z3Z3E4b2s4N2Q4d2U5b2lhMTV1aW56b2x0d25oNyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3ohhwHhY4bjsEZwG8Y/giphy-downsized-large.gif)
-<!-- 修仙/中医药仓库 - 修复版动态徽章（100%可显示） -->
-<div align="center">
-  <img src="https://img.shields.io/github/stars/你的用户名/你的仓库名?style=for-the-badge&logo=github&color=E6E6FA&label=✨ 仙门弟子数" alt="GitHub Stars">
-  <img src="https://img.shields.io/github/forks/你的用户名/你的仓库名?style=for-the-badge&logo=github&color=DDA0DD&label=🍴 传功弟子数" alt="GitHub Forks">
-  <img src="https://img.shields.io/github/license/你的用户名/你的仓库名?style=for-the-badge&logo=github&color=F0E68C&label=📜 仙门戒律" alt="GitHub License">
-  <img src="https://img.shields.io/github/languages/top/你的用户名/你的仓库名?style=for-the-badge&logo=github&color=98FB98&label=💻 仙术载体" alt="Top Language">
-</div>
 
 ## 📋 仙门目录（点我直达，无需御剑飞行）
 - [【📖 仙门前言｜为何修仙人必懂用药？】](#📖-仙门前言为何修仙人必懂用药)
