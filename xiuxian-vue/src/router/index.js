@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../views/Home.vue'
+import Lore from '../views/Lore.vue'
 import Realm from '../views/Realm.vue'
 import Technique from '../views/Technique.vue'
 import Alchemy from '../views/Alchemy.vue'
@@ -13,6 +14,7 @@ import Battle from '../views/Battle.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
+  { path: '/lore', name: 'Lore', component: Lore },
   { path: '/realm', name: 'Realm', component: Realm },
   { path: '/technique', name: 'Technique', component: Technique },
   { path: '/alchemy', name: 'Alchemy', component: Alchemy },

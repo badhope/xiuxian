@@ -99,6 +99,10 @@ const getEfficiencyColor = (efficiency) => {
   return 'text-jade'
 }
 
+const isDisabled = (type) => {
+  return (type.requireRoot && !userStore.userData.rootType) || (type.cost && userStore.userData.lingqi < type.cost)
+}
+
 onUnmounted(() => {
   if (meditationTimer) {
     clearInterval(meditationTimer)
@@ -107,110 +111,111 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="practice-page max-w-4xl mx-auto px-4 py-8">
-    <h1 class="text-4xl font-bold text-center text-gold mb-2">修炼中心</h1>
-    <p class="text-center text-paper/60 mb-8">静心凝神，感悟天地灵气</p>
+  <div class="practice-page max-w-4xl mx-auto px-3 md:px-4 py-6 md:py-8">
+    <h1 class="text-3xl md:text-4xl font-bold text-center text-gold mb-1 md:mb-2">修炼中心</h1>
+    <p class="text-center text-paper/60 mb-5 md:mb-8 text-sm md:text-base">静心凝神，感悟天地灵气</p>
 
     <!-- 修炼状态卡片 -->
-    <div class="glass-card rounded-2xl p-6 mb-6">
+    <div class="glass-card rounded-2xl p-4 md:p-6 mb-4 md:mb-6">
       <!-- 境界显示 -->
-      <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center justify-between mb-4 md:mb-6">
         <div>
-          <div class="text-sm text-paper/50 mb-1">当前境界</div>
-          <div class="text-2xl font-bold text-gold">{{ userStore.currentRealm?.name }}</div>
+          <div class="text-xs md:text-sm text-paper/50 mb-0.5 md:mb-1">当前境界</div>
+          <div class="text-xl md:text-2xl font-bold text-gold">{{ userStore.currentRealm?.name }}</div>
         </div>
         <div class="text-right">
-          <div class="text-sm text-paper/50 mb-1">突破概率</div>
-          <div class="text-xl font-bold text-azure">{{ (userStore.breakthroughRate * 100).toFixed(1) }}%</div>
+          <div class="text-xs md:text-sm text-paper/50 mb-0.5 md:mb-1">突破概率</div>
+          <div class="text-lg md:text-xl font-bold text-azure tabular-nums">{{ (userStore.breakthroughRate * 100).toFixed(1) }}%</div>
         </div>
       </div>
 
       <!-- 修为进度 -->
-      <div class="mb-6">
-        <div class="flex justify-between text-sm mb-2">
+      <div class="mb-4 md:mb-6">
+        <div class="flex justify-between text-xs md:text-sm mb-1.5 md:mb-2">
           <span class="text-paper/70">修为进度</span>
-          <span class="text-azure">{{ userStore.userData.cultivation }} / 1000</span>
+          <span class="text-azure font-medium tabular-nums">{{ userStore.userData.cultivation }} / 1000</span>
         </div>
-        <div class="h-4 bg-mystic rounded-full overflow-hidden">
+        <div class="h-2.5 md:h-4 bg-mystic rounded-full overflow-hidden">
           <div
-            class="h-full bg-gradient-to-r from-azure to-gold transition-all duration-500"
+            class="h-full bg-gradient-to-r from-azure to-gold transition-all duration-500 ease-out"
             :style="{ width: userStore.realmProgress + '%' }"
           ></div>
         </div>
       </div>
 
       <!-- 灵根显示 -->
-      <div v-if="userStore.userData.rootType" class="mb-6 p-3 bg-gold/10 rounded-xl">
+      <div v-if="userStore.userData.rootType" class="mb-4 md:mb-6 p-2.5 md:p-3 bg-gold/10 rounded-xl">
         <div class="flex items-center justify-between">
-          <div>
-            <span class="text-sm text-paper/50">先天灵根</span>
-            <span class="ml-2 text-gold font-bold">{{ userStore.userData.rootType }}</span>
+          <div class="flex items-center gap-1.5 md:gap-2">
+            <span class="text-xs md:text-sm text-paper/50">先天灵根</span>
+            <span class="text-gold font-bold text-sm md:text-base">{{ userStore.userData.rootType }}</span>
           </div>
-          <span class="text-jade text-sm">修炼效率+{{ (userStore.rootEfficiency * 100).toFixed(0) }}%</span>
+          <span class="text-jade text-xs md:text-sm font-medium">修炼效率+{{ (userStore.rootEfficiency * 100).toFixed(0) }}%</span>
         </div>
       </div>
 
       <!-- 冥想计时器 -->
-      <div class="text-center mb-6">
-        <div class="text-6xl font-mono text-gold mb-2">
+      <div class="text-center mb-4 md:mb-6">
+        <div class="text-4xl md:text-6xl font-mono text-gold mb-1.5 md:mb-2 tabular-nums">
           {{ formatTime(meditationSeconds) }}
         </div>
-        <div :class="['text-sm mb-4', isMeditating ? 'text-gold' : 'text-paper/50']">
+        <div :class="['text-sm mb-3 md:mb-4', isMeditating ? 'text-gold' : 'text-paper/50']">
           {{ isMeditating ? '🧘 冥想中...' : '⏸️ 待命中' }}
         </div>
       </div>
 
       <!-- 修炼方式选择 -->
-      <div class="grid grid-cols-3 gap-3 mb-6">
+      <div class="grid grid-cols-3 gap-2 md:gap-3 mb-4 md:mb-6">
         <button
           v-for="type in meditationTypes"
           :key="type.id"
           @click="activeMeditationType = type.id"
-          :disabled="(type.requireRoot && !userStore.userData.rootType) || (type.cost && userStore.userData.lingqi < type.cost)"
+          :disabled="isDisabled(type)"
           :class="[
-            'p-3 rounded-xl text-center transition-all duration-300',
+            'p-2.5 md:p-3 rounded-xl text-center transition-all duration-200 active:scale-95',
             activeMeditationType === type.id 
               ? 'bg-gold/20 ring-2 ring-gold' 
               : 'bg-white/5 hover:bg-white/10',
-            (type.requireRoot && !userStore.userData.rootType) || (type.cost && userStore.userData.lingqi < type.cost)
+            isDisabled(type)
               ? 'opacity-40 cursor-not-allowed'
               : 'cursor-pointer'
           ]"
+          :aria-disabled="isDisabled(type)"
         >
-          <div class="text-2xl mb-1">{{ type.icon }}</div>
-          <div class="text-xs text-paper font-bold">{{ type.name }}</div>
-          <div :class="['text-xs', getEfficiencyColor(type.efficiency)]">效率 x{{ type.efficiency }}</div>
+          <div class="text-xl md:text-2xl mb-0.5 md:mb-1">{{ type.icon }}</div>
+          <div class="text-xs md:text-sm text-paper font-bold leading-tight mb-0.5">{{ type.name }}</div>
+          <div :class="['text-xs md:text-sm', getEfficiencyColor(type.efficiency)]">效率 x{{ type.efficiency }}</div>
         </button>
       </div>
 
       <!-- 修炼效率显示 -->
-      <div class="bg-azure/10 rounded-xl p-4 mb-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <span class="text-paper/70">预计修炼效率：</span>
-            <span class="text-azure font-bold">{{ cultivationPerMinute }}</span>
-            <span class="text-paper/50"> 修为/分钟</span>
+      <div class="bg-azure/10 rounded-xl p-3 md:p-4 mb-4 md:mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div class="flex items-center gap-1.5">
+            <span class="text-paper/70 text-sm">预计修炼效率：</span>
+            <span class="text-azure font-bold text-lg md:text-xl tabular-nums">{{ cultivationPerMinute }}</span>
+            <span class="text-paper/50 text-sm">修为/分钟</span>
           </div>
-          <div v-if="currentType.cost" class="text-gold">
+          <div v-if="currentType.cost" class="text-gold text-sm md:text-base font-medium">
             消耗: {{ currentType.cost }}灵石/次
           </div>
         </div>
       </div>
 
       <!-- 修炼按钮 -->
-      <div class="flex justify-center gap-4">
+      <div class="flex justify-center gap-3 md:gap-4">
         <button
           v-if="!isMeditating"
           @click="startMeditation"
           :disabled="!canMeditate"
-          class="btn-meditate px-10 py-4 rounded-xl text-xl font-bold disabled:opacity-40 disabled:cursor-not-allowed"
+          class="btn-meditate px-6 md:px-10 py-3 md:py-4 rounded-xl text-lg md:text-xl font-bold disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 active:scale-95"
         >
           🧘 开始修炼
         </button>
         <button
           v-else
           @click="stopMeditation"
-          class="btn-stop px-10 py-4 rounded-xl text-xl font-bold"
+          class="btn-stop px-6 md:px-10 py-3 md:py-4 rounded-xl text-lg md:text-xl font-bold transition-all duration-200 active:scale-95"
         >
           ⏹️ 停止修炼
         </button>
@@ -218,9 +223,9 @@ onUnmounted(() => {
     </div>
 
     <!-- 修炼提示 -->
-    <div class="glass-card rounded-xl p-4 mb-6">
-      <h3 class="text-gold font-bold mb-3">💡 修炼须知</h3>
-      <ul class="text-sm text-paper/60 space-y-1">
+    <div class="glass-card rounded-xl p-3 md:p-4 mb-4 md:mb-6">
+      <h3 class="text-gold font-bold mb-2 md:mb-3 text-sm md:text-base">💡 修炼须知</h3>
+      <ul class="text-xs md:text-sm text-paper/60 space-y-1">
         <li>• 修为达到1000即可尝试突破境界</li>
         <li>• 突破有概率失败，失败会损失修为</li>
         <li>• 拥有灵根可提升修炼效率</li>
@@ -230,22 +235,22 @@ onUnmounted(() => {
     </div>
 
     <!-- 统计数据 -->
-    <div class="grid grid-cols-4 gap-4">
-      <div class="glass-card rounded-xl p-4 text-center">
-        <div class="text-2xl font-bold text-gold">{{ userStore.userData.breakthroughs }}</div>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-4">
+      <div class="glass-card rounded-xl p-3 md:p-4 text-center">
+        <div class="text-xl md:text-2xl font-bold text-gold tabular-nums">{{ userStore.userData.breakthroughs }}</div>
         <div class="text-xs text-paper/50">突破次数</div>
       </div>
-      <div class="glass-card rounded-xl p-4 text-center">
-        <div class="text-2xl font-bold text-azure">{{ userStore.userData.practiceHours }}</div>
+      <div class="glass-card rounded-xl p-3 md:p-4 text-center">
+        <div class="text-xl md:text-2xl font-bold text-azure tabular-nums">{{ userStore.userData.practiceHours }}</div>
         <div class="text-xs text-paper/50">修炼时长</div>
       </div>
-      <div class="glass-card rounded-xl p-4 text-center">
-        <div class="text-2xl font-bold text-jade">{{ userStore.userData.loginDays }}</div>
+      <div class="glass-card rounded-xl p-3 md:p-4 text-center">
+        <div class="text-xl md:text-2xl font-bold text-jade tabular-nums">{{ userStore.userData.loginDays }}</div>
         <div class="text-xs text-paper/50">签到天数</div>
       </div>
-      <div class="glass-card rounded-xl p-4 text-center">
-        <div class="text-2xl font-bold text-vermilion">{{ userStore.realmIndex + 1 }}</div>
-        <div class="text-xs text-paper/50">当前境界</div>
+      <div class="glass-card rounded-xl p-3 md:p-4 text-center">
+        <div class="text-xl md:text-2xl font-bold text-vermilion tabular-nums">{{ userStore.userData.battleStats?.wins || 0 }}</div>
+        <div class="text-xs text-paper/50">战斗胜利</div>
       </div>
     </div>
   </div>
@@ -263,28 +268,22 @@ onUnmounted(() => {
 }
 
 .btn-meditate {
-  background: linear-gradient(135deg, #5a7e7a, #3d5c58);
+  background: linear-gradient(135deg, rgba(74, 111, 165, 0.3), rgba(74, 111, 165, 0.2));
   color: #f5f0e6;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  border: 1px solid rgba(74, 111, 165, 0.4);
 }
 
 .btn-meditate:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(90, 126, 122, 0.4);
+  background: linear-gradient(135deg, rgba(74, 111, 165, 0.4), rgba(74, 111, 165, 0.3));
 }
 
 .btn-stop {
-  background: linear-gradient(135deg, #c53d43, #8b282c);
+  background: linear-gradient(135deg, rgba(197, 61, 67, 0.3), rgba(197, 61, 67, 0.2));
   color: #f5f0e6;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  border: 1px solid rgba(197, 61, 67, 0.4);
 }
 
 .btn-stop:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(197, 61, 67, 0.4);
+  background: linear-gradient(135deg, rgba(197, 61, 67, 0.4), rgba(197, 61, 67, 0.3));
 }
 </style>
